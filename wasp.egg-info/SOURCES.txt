@@ -1,0 +1,10 @@
+MANIFEST.in
+wasp/__init__.py
+wasp/database.py
+wasp/wasp.py
+wasp.egg-info/PKG-INFO
+wasp.egg-info/SOURCES.txt
+wasp.egg-info/dependency_links.txt
+wasp.egg-info/requires.txt
+wasp.egg-info/top_level.txt
+wasp/templates/base.html

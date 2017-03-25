@@ -1,0 +1,5 @@
+graft wasp/templates
+graft wasp/static
+include wasp/database.py
+
+

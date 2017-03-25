@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+{% for name in names %}
+	<h1> new Category {{name.name}} created by used id : {{name.user_id}} at {{name.time_created}} and {{name.time_updated}}</h1>
+{% endfor %}
+
+</body>
+</html>
