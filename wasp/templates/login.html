@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block headScript %}
+	<!--Pre-requisite for Google Sign In -->
+	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+	<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+{% endblock %}
+{% block content %}
+	<div class="col-md-8 col-md-offset-2">
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-info">
+				{% for message in messages %}
+					<p>{{message}}</p>
+				{% endfor %}
+				</div>
+			{% endif %}
+		{% endwith %}
+		<h2 class="text-center">Login with your favourite account</h2>
+		<div class="col-md-8 col-md-offset-2 socialButton">
+			<div id="signInButton" class="col-md-6">
+				<span class="g-signin"
+					data-scope="openid email"
+					data-clientid="424415908573-78i3qk0h792r3l8iihm89bq6017dv0qr.apps.googleusercontent.com"
+					data-redirecturi="postmessage"
+					data-accesstype="offline"
+					data-cookiepolicy="single_host_origin"
+					data-callback="signInCallback"
+					data-approvalprompt="force">
+				</span>
+        	</div>
+		</div>
+	</div>
+
+	<script>
+		function signInCallback(authResult){
+			if (authResult['code']){
+				//Hide the sign-in button as user authorization complete and code is recieved
+				$('.socialButton').html('<button class="btn btn-primary">Authenticating...</button>');
+				//Send the one-time code to server and if we recieve success response from server, proceed with login successful message and redirect to home page
+				$.ajax({
+					type: 'POST',
+					url: '/gconnect?state={{STATE}}',
+					processData: false,
+					data: authResult['code'],
+					contentType: 'application/octet-stream; charset= utf-8',
+					success: function(result){
+						if (result){
+							window.location.href = "/category";
+						}
+					}
+				});
+			}
+			else if (authResult['error']){
+				console.log('There was an error:' +authResult['error']);
+				$('.socialButton').html('<p> Unexpected error occured. Please try again</p>');
+
+			}
+			else {
+				$('.socialButton').html('<p> Failed to make a server-side call. Check your configuration and console.</p>');
+			}
+		}
+	</script>
+
+
+
+
+{% endblock %}

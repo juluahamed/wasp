@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-6 col-md-offset-2 col-xs-12">
+	<h2 class="text-center">Add a new category</h2>
+	<form name="newcategoryForm" action="/newcategory" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+	  <div class="form-group">
+	    <label for="catName">New Category</label>
+	    <input type="text" class="form-control" id="catName" aria-describedby="catNameHelp" placeholder="New Category" name="catName">
+	    <small id="catNameHelp" class="form-text text-muted">Please make sure a new category is required. Find our exsisting categories <a href="/category">here</a> </small>
+	    <div class="alert alert-danger new-category-alert">
+	    	<small>Name field cant be empty</small>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="catPic">Upload Image</label>
+	    <input type="file" class="form-control-file" id="catPic" aria-describedby="catPicHelp" name="file">
+	    <small id="catPicHelp" class="form-text text-muted">Please upload a relevant picture</small>
+	    {% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-danger new-category-pic-alert ">
+				{% for message in messages %}
+					<small>{{message}}</small>
+				{% endfor %}
+				</div>
+			{% endif %}
+		{% endwith %}
+	  </div>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+{% endblock %}

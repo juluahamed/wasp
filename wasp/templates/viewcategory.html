@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+{% if session.get('user_id') %}
+<p class="text-center info-banner"> <span class="alert alert-success text-center">You can now add new item <a href="/newitem"><button href="/newitem" class="btn btn-primary">Add items</button></a></span></p>
+{% else %}
+<p class="text-center info-banner"> <span class="alert alert-success">Login to add a new item <a href="/login"><button href="/login" class="btn btn-primary">Login</button></a></span></p>
+{% endif %}
+{%if items %}
+	{% for item in items %}
+	<div class="col-md-3 col-xs-4 box_grid" redir={{url_for('viewItem', category_id=item.category_id, item_id=item.id)}}>
+		<ul>
+			<li>{{item.name}}</li>
+			<li>{{item.description}}</li>
+			<li>{{item.time_created}}</li>
+		</ul>
+		{% if session.get('user_id') == item.user_id %}
+		<a href="/edit"><button class="btn btn-primary btn-block">Edit</button></a>
+		{% endif %}
+	</div>
+	{% endfor %}
+{% else %}
+<p class="text-center">No Items to display</p>
+{% endif %}
+{% endblock %}

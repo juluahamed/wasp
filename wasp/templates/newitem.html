@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-6 col-md-offset-2 col-xs-12">
+	<h2 class="text-center">Add a new item</h2>
+	<form name="newItemForm" action="/newitem" method="post" onsubmit="return validateItemForm()" enctype="multipart/form-data">
+	  <div class="form-group">
+	    <label for="catName">Choose a category</label>
+	    <input type="text" class="form-control" id="catName" aria-describedby="catNameHelp" placeholder="Search here for exsisting categories" name="catName" list="categories" value="{{defaultCategory}}">
+	    <small id="catHelp" class="form-text text-muted">Choose from a exsisting categories. To add a new category click <a href="/newcategory">here</a></small>
+	    {% if categories %}
+	    	<datalist id="categories">
+	    	{% for category in categories %}
+	    		<option value="{{category}}">{{category}}</option>
+	    	{% endfor %}
+	    		
+	    	</datalist>
+	    {% endif %}
+	    <div class="alert alert-danger new-item-cat-alert">
+	    	<small id="catError"></small>
+	    </div>
+	  </div>	
+	  <div class="form-group">
+	    <label for="itemName">New Item</label>
+	    <input type="text" class="form-control" id="itemName" aria-describedby="itemNameHelp" placeholder="New Item" name="itemName">
+	    <div class="alert alert-danger new-item-alert">
+	    	<small>Name field cant be empty</small>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="itemDescription">Description</label>
+	    <input type="text" class="form-control" rows="5" id="itemDescription" aria-describedby="catNameHelp" placeholder="Description" name="itemDescription">
+	    <small id="itemDescriptionHelp" class="form-text text-muted">Required. Please provide a description</small>
+	    <div class="alert alert-danger new-item-desc-alert">
+	    	<small>Name field cant be empty</small>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="itemPic">Upload Image</label>
+	    <input type="file" class="form-control-file" id="itemPic" aria-describedby="catPicHelp" name="file">
+	    <small id="itemPicHelp" class="form-text text-muted">Optional. You can also add pictures later</small>
+	    {% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-danger new-item-pic-alert ">
+				{% for message in messages %}
+					<small>{{message}}</small>
+				{% endfor %}
+				</div>
+			{% endif %}
+		{% endwith %}
+	  </div>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+<script>
+	var data={{categories|tojson}};
+	function validateItemForm() {
+		var iCat = document.forms["newItemForm"]["catName"].value;
+	    var iName = document.forms["newItemForm"]["itemName"].value;
+	    var iDesc = document.forms["newItemForm"]["itemDescription"].value;
+	    console.log((data.indexOf(iCat) < 0));
+	    if ((iName === "") || (iDesc === "") || (iCat === "") || (data.indexOf(iCat) < 0)){
+	    	if (iCat === ""){
+	    		$('#catError').html("Category name can't be empty");
+	    		$('.new-item-cat-alert').css("display", "block");
+	    		console.log('icat bl  and icat value is '+ iCat +iName +iDesc);
+	    	}
+	    	else if (data.indexOf(iCat) < 0) {
+	    		$('#catError').html("Category does not exsist");
+	    		$('.new-item-cat-alert').css("display", "block");
+	    		console.log('icat bl >1');
+	    	}
+	    	else{
+	    		$('.new-item-cat-alert').css("display", "none");
+	    		console.log('icat none ic');
+	    	}
+	    	
+		    if (iName == "") {
+		        $('.new-item-alert').css("display", "block");
+		    }
+		    else{
+		    	$('.new-item-alert').css("display", "none");
+		    }
+		    if (iDesc == "") {
+		        $('.new-item-desc-alert').css("display", "block");
+		    }
+		    else{
+		    	$('.new-item-desc-alert').css("display", "none");
+
+		    }
+		    return false;
+	    }
+	}
+	
+</script>
+{% endblock %}

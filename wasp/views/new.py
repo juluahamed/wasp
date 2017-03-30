@@ -4,7 +4,7 @@ from wasp.database import db_session
 from wasp.models import User, Category
 
 @app.route('/new')
-def New():
+def newKategory():
 	#q = User(name='pranthan', email='killmadi@x.com')
 	#db_session.add(q)
 	#db_session.commit()

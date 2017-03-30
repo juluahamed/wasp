@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+	{% for name in names %}
+		<h1>Hello World, right now {{name.name}} and his id is {{name.id}} and his email is {{name.email}} and his pic is at {{name.picture}} and created at {{name.time_created}} and last update on {{name.time_updated}}</h1>
+	{% endfor %}
+        
+{% endblock %}

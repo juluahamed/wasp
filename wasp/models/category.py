@@ -10,6 +10,7 @@ class Category(Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String(50), nullable=False)
 	user_id = Column(Integer, ForeignKey('users.id'))
+	picture = Column(String(100), default='default_cat_image.png')
 	user = relationship(User)
 	time_created = Column(DateTime(timezone=True), server_default=func.now())
 	time_updated = Column(DateTime(timezone=True), onupdate=func.now())
