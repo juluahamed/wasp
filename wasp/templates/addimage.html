@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-6 col-md-offset-2 col-xs-12">
+	<h2 class="text-center">Add a new image</h2>
+	<form name="addPicForm" action="{{url_for('addImage',item_id=item_id, category_id=category_id)}}" method="post" enctype="multipart/form-data">
+	  <div class="form-group">
+	    <label for="addPic">Upload Image</label>
+	    <input type="file" class="form-control-file" id="addPic" aria-describedby="addPicHelp" name="file">
+	    <small id="addPicHelp" class="form-text text-muted">Please upload a relevant picture</small>
+	    {% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-danger">
+				{% for message in messages %}
+					<small>{{message}}</small>
+				{% endfor %}
+				</div>
+			{% endif %}
+		{% endwith %}
+	  </div>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+{% endblock %}

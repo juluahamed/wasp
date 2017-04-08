@@ -3,16 +3,17 @@ from wasp. __init__ import app, session, UPLOAD_FOLDER
 from flask import request, redirect, flash, url_for,render_template
 from wasp.database import db_session
 from wasp.models import Category, Item, Picture
-from wasp.wasp_utils import allowed_file, rename_file
+from wasp.wasp_utils import allowed_file, rename_file, login_required
 import os
 
 @app.route('/newitem', methods=['GET','POST'])
+@login_required
 def newItem():
 	print "Just at the begining"
 	print session.get('_flashes', [])
-	if not session.get('username'):
-		flash('You should be logged in to add new items. Log In here')
-		return redirect(url_for('showLogin'))
+	#if not session.get('username'):
+		#flash('You should be logged in to add new items. Log In here')
+		#return redirect(url_for('showLogin'))
 
 	if request.method == 'POST':
 		print "inside post"

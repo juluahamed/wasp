@@ -1,10 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="col-md-12">
-	<div><img class="img-responsive" src="{{url_for('uploadedFile', filename=picture)}}"></div>
-	<h2 class="text-center">{{item.name}}</h2>
+	{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-info">
+				{% for message in messages %}
+					<p>{{message}}</p>
+				{% endfor %}
+				</div>
+			{% endif %}
+	{% endwith %}
+	<div class="col-md-12 default-pic"><img class="img-responsive" src="{{url_for('uploadedFile', filename=default_picture)}}">
+	{% if item.user_id == session.get('user_id') and pictures%}<p class="text-center">You posted this item. You may delete this image <a href="{{url_for('deleteItemImage', image=default_picture)}}"><span class="glyphicon glyphicon-trash"></span></a></p>{% endif %}</div>
+	<div class="col-md-12 pic-tray">
+		{% for picture in pictures %}
+		<div class="col-md-2">
+			<img class="img-responsive" src="{{url_for('uploadedFile', filename=picture.name)}}">
+		</div>
+		{% endfor %}
+	</div>
+	<h2 class="text-center">{{item.name}} {% if item.user.id == session.get('user_id') %}<a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}"><span class="glyphicon glyphicon-edit small"></span></a>{% endif %}</h2>
 	<p class="text-center">{{item.description}}</p>
-	<p class="text-left"><span>Created by:{{item.user.name}}</span> | <span> Last edited:{% if item.time_updated is none %} {{item.time_created}} {% else %} {{item.time_updated}} {% endif %} </span> | <span>Created at: {{item.time_created}}</span>
+	<p class="text-center small"><span>Created by:{{item.user.name}}</span> | <span> Last edited:{% if item.time_updated is none %} {{item.time_created}} {% else %} {{item.time_updated}} {% endif %} </span> | <span>Created at: {{item.time_created}}</span></p>
+	{% if session.get('username') %}
+	<p class="alert alert-success text-center">Know about this item? You can add new images to make this better <a href="{{url_for('addImage', category_id=item.category.id, item_id=item.id)}}"><button class="btn btn-primary">Add Images</button></a></p>
+	{% endif %}
 
 </div>
+
+<script>
+	$(".pic-tray div img").click(function(){
+		var selected_src = $(this).attr("src");
+		$(".default-pic img").attr("src", selected_src);
+		$(".default-pic p a").attr("href","/deleteimage/"+ selected_src.split('/')[2])
+});
+</script>
+
 {% endblock %}

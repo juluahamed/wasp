@@ -9,3 +9,7 @@ from newcategory import newCategory
 from sendfile import uploadedFile
 from viewcategory import viewCategory
 from viewitem import viewItem
+from addimage import addImage
+from errornotfound import errorNotFound
+from deleteitemimage import deleteItemImage
+from edititem import editItem

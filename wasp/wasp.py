@@ -27,7 +27,7 @@ app.config.update(dict(
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 from views import showRoot, newCategory, showLogin, gconnect, gdisconnect, newItem, showCategory, uploadedFile
-from views import viewCategory, viewItem
+from views import viewCategory, viewItem, addImage, errorNotFound, deleteItemImage, editItem
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
