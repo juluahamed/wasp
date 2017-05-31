@@ -80,7 +80,7 @@ input[type=submit] {
     width: 27px;
     border-radius: 50%; 
 }
-.new-category-alert, .new-item-alert, .new-item-desc-alert, .new-item-cat-alert{
+.new-category-alert, .new-item-alert, .new-item-desc-alert, .new-item-cat-alert, .new-item-alert-iName, .new-item-alert-iDesc{
     display: none;
 }
 .category_grid img{
@@ -93,6 +93,16 @@ input[type=submit] {
 .edit-link{
     right: 0;
 }
+.box_grid{
+    margin: 3px;
+    border: solid;
+}
+
+.box_grid :hover{
+    cursor: pointer;
+}
+
+
 
 
 @media screen and (max-width: 699px) {
@@ -103,3 +113,14 @@ input[type=submit] {
         display: none;
     }
 }
+
+@media screen and (min-width: 992px) {
+    .box_grid{
+        width: calc((100% - 24px)/4);
+    }
+    .box_grid img{
+        height:120px;
+    }
+}
+
+

@@ -3,22 +3,16 @@ from wasp. __init__ import app, session, UPLOAD_FOLDER
 from flask import request, redirect, flash, url_for,render_template
 from wasp.database import db_session
 from wasp.models import Category, Item, Picture
-from wasp.wasp_utils import allowed_file, rename_file, login_required
+from wasp.wasp_utils import allowed_file, rename_file, login_required, validate_csfr, generate_csrf_token
 import os
 
 @app.route('/newitem', methods=['GET','POST'])
 @login_required
 def newItem():
-	print "Just at the begining"
-	print session.get('_flashes', [])
-	#if not session.get('username'):
-		#flash('You should be logged in to add new items. Log In here')
-		#return redirect(url_for('showLogin'))
-
+	""" View function to create new Item. Performs CSFR validation """
 	if request.method == 'POST':
-		print "inside post"
-		print session.get('_flashes', [])
-
+		csfr_token = request.form.get('_csrf_token')
+		validate_csfr(csfr_token)
 		catName = request.form.get('catName')
 		itemName = request.form.get('itemName')
 		itemDescription = request.form.get('itemDescription')
@@ -44,8 +38,6 @@ def newItem():
 
 		# Find the id of next item and its image in db and use it in rename the file 
 		# accordingly for storage
-		print "Just before storage IDs"
-		print session.get('_flashes', [])
 		item_id = db_session.query(Item.id).order_by(Item.id.desc()).first()
 		pic_num = db_session.query(Picture.id).order_by(Picture.id.desc()).first()
 		if item_id is None:
@@ -63,20 +55,12 @@ def newItem():
 		print item_id,pic_num
 
 		if file:
-			print "Inside If file"
-			print session.get('_flashes', [])
 			if allowed_file(file.filename):
-				print "Inside allowed file"
-				print session.get('_flashes', [])
 				filename = rename_file(itemName,file.filename,catName,item_id,pic_num)
-				print filename
-				#user = db_session.query(User).filter_by(id=session['user_id']).one()
 				category = db_session.query(Category.id).filter_by(name=catName).one()
 				new_item = Item(name=itemName, description=itemDescription, category_id = category.id, user_id=session['user_id'])
 				db_session.add(new_item)
 				db_session.commit()
-				print new_item.id
-
 				new_picture = Picture(name=filename, item_id=new_item.id, user_id = session['user_id'])
 				db_session.add(new_picture)
 				db_session.commit()
@@ -92,10 +76,11 @@ def newItem():
 			db_session.add(new_item)
 			db_session.commit()
 			flash('New Item %s added!' %itemName)
-			print new_item.id
 			return redirect(url_for('showCategory'))
 	else:
+		app.jinja_env.globals['csrf_token'] = generate_csrf_token
 		categories=db_session.query(Category.name).all()
+
 		# To make this list JSON serializable for autocomplete functionality in template
 		categories = [category[0] for category in categories]
 		return render_template('newitem.html', categories=categories)

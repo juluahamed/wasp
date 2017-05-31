@@ -3,7 +3,7 @@
     Wasp
     ~~~~~~
 
-    A flask application madewith sqlite3, oauth2, sqlalchemy
+    A flask application made with sqlite3, oauth2, sqlalchemy
 
     Author: Julu Ahamed
 """
@@ -27,7 +27,7 @@ app.config.update(dict(
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 from views import showRoot, newCategory, showLogin, gconnect, gdisconnect, newItem, showCategory, uploadedFile
-from views import viewCategory, viewItem, addImage, errorNotFound, deleteItemImage, editItem
+from views import viewCategory, viewItem, addImage, errorNotFound, deleteItemImage, editItem, ajaxLike
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

@@ -1,14 +1,14 @@
 from wasp.__init__ import app, session
-from flask import request, render_template, make_response, redirect,flash
+from flask import request, make_response, redirect
 import httplib2
 import json
 
 @app.route('/gdisconnect')
 def gdisconnect():
+	"""View function for disconnecting/ logout from google account """
 	access_token = session.get('access_token')
 	uname = session.get('username')
-	print uname
-	print access_token;
+
 	if not access_token:
 		response = make_response(
 			json.dumps('Current user not connected.'), 401)

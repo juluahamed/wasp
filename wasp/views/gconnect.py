@@ -12,7 +12,9 @@ CLIENT_ID = json.loads(
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-	# check if state token recieved is valid
+	"""View function to handle google authentication via Oauth2"""
+	
+	# Check if state token recieved is valid
 	if request.args.get('state') != session['state']:
 		response = make_response(json.dumps('Invalid state parameters'), 401)
 		response.headers['Content-Type'] = 'application/json'

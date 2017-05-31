@@ -1,17 +1,18 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from wasp.database import Base
-from wasp.models import User
-from flask import url_for
+from wasp.models import User, Category, Item
 
-class Category(Base):
-	__tablename__ = 'categories'
+class Like(Base):
+	__tablename__ = 'likes'
 
 	id = Column(Integer, primary_key=True)
-	name = Column(String(50), nullable=False)
+	category_id = Column(Integer, ForeignKey('categories.id'))
+	category = relationship(Category)
+	item_id = Column(Integer, ForeignKey('items.id'))
+	item = relationship(Item)
 	user_id = Column(Integer, ForeignKey('users.id'))
-	picture = Column(String(100), default='default_cat_image.png')
 	user = relationship(User)
 	time_created = Column(DateTime(timezone=True), server_default=func.now())
 	time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -19,13 +20,13 @@ class Category(Base):
 	# Property to return a JSON serialized dictionary of db class
 	@property
 	def serialize(self):
-		return{
+		return {
 			'id': self.id,
-			'name': self.name,
-			'picture': self.picture,
+			'category_id': self.category_id,
+			'category_name': self.category.name,
+			'item_id': self.item_id,
+			'item_name': self.item.name,
 			'user_id': self.user_id,
-			'user_name': self.user.name,
 			'time_created': self.time_created,
-			'time_updated': self.time_updated,
-			'pic_url': url_for('uploadedFile', filename=self.picture)
+			'time_updated': self.time_updated
 		}

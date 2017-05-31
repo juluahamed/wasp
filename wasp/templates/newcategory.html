@@ -25,7 +25,11 @@
 			{% endif %}
 		{% endwith %}
 	  </div>
+	  <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 	  <button type="submit" class="btn btn-primary">Submit</button>
+	  <span>
 	</form>
+	<a href="{{url_for('showCategory')}}"><button type="button" class="btn btn-warning">Cancel</button></a>
+		</span>
 </div>
 {% endblock %}

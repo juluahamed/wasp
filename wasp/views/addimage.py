@@ -8,16 +8,15 @@ import os
 @app.route('/category/<int:category_id>/item/<int:item_id>/addimage', methods=['GET','POST'])
 @login_required
 def addImage(category_id, item_id):
-	#if not session.get('username'):
-		#flash('You should be logged in to add new images. Log in here')
-		#return redirect(url_for('viewItem', category_id=category_id, item_id=item_id))
+	""" View function for adding new images to item """
 	if request.method == 'POST':
-		print("inside post")
 		# check if the post request has the file part
 		if 'file' not in request.files:
 			flash('No file part in the request')
 			return redirect(request.url)
+		
 		file = request.files['file']
+		
 		# if user does not select file, browser also
 		# submit a empty part without filename
 		if file.filename == '':
@@ -25,16 +24,19 @@ def addImage(category_id, item_id):
 			return redirect(request.url)
 
 		pic_num = db_session.query(Picture.id).order_by(Picture.id.desc()).first()
+		
 		if pic_num is None:
 			pic_num = 0
 		else:
 			pic_num = pic_num[0]
+		
 		pic_num += 1
+		
+		# If file is present, store the meta data in the db and store the image in the file directory
 		if file and allowed_file(file.filename):
 			item = check_item(item_id, category_id)
 
 			filename = rename_file(item.name, file.filename, item.category.name, item_id, pic_num)
-			print filename
 			new_picture = Picture(name=filename, item_id=item_id, user_id=session['user_id'])
 			db_session.add(new_picture)
 			db_session.commit()

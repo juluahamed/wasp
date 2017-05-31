@@ -29,7 +29,7 @@
 	  </div>
 	  <div class="form-group">
 	    <label for="itemDescription">Description</label>
-	    <input type="text" class="form-control" rows="5" id="itemDescription" aria-describedby="catNameHelp" placeholder="Description" name="itemDescription">
+	    <textarea type="text" class="form-control" rows="5" id="itemDescription" aria-describedby="catNameHelp" placeholder="Description" name="itemDescription"></textarea>
 	    <small id="itemDescriptionHelp" class="form-text text-muted">Required. Please provide a description</small>
 	    <div class="alert alert-danger new-item-desc-alert">
 	    	<small>Name field cant be empty</small>
@@ -49,8 +49,11 @@
 			{% endif %}
 		{% endwith %}
 	  </div>
+	  <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 	  <button type="submit" class="btn btn-primary">Submit</button>
+	  <span>
 	</form>
+	<a href="{{url_for('showCategory')}}"><button type="button" class="btn btn-warning">Cancel</button></a>
 </div>
 
 <script>
@@ -59,8 +62,7 @@
 		var iCat = document.forms["newItemForm"]["catName"].value;
 	    var iName = document.forms["newItemForm"]["itemName"].value;
 	    var iDesc = document.forms["newItemForm"]["itemDescription"].value;
-	    console.log((data.indexOf(iCat) < 0));
-	    if ((iName === "") || (iDesc === "") || (iCat === "") || (data.indexOf(iCat) < 0)){
+	    if ((iName === "") || (iDesc === "") || (iCat === "") || (data.indexOf(iCat) < 0) || (iDesc.length < 58)){
 	    	if (iCat === ""){
 	    		$('#catError').html("Category name can't be empty");
 	    		$('.new-item-cat-alert').css("display", "block");
@@ -89,8 +91,18 @@
 		    	$('.new-item-desc-alert').css("display", "none");
 
 		    }
+		    if (iDesc.length < 58) {
+	    	$('#catError').html("Description should be minimum of 58 characters");
+	    		$('.new-item-cat-alert').css("display", "block");
+	    		console.log('icat bl >1');
+	    	}
+	    	else{
+	    		$('.new-item-cat-alert').css("display", "none");
+	    		console.log('icat none ic');
+	    	}
 		    return false;
 	    }
+	    
 	}
 	
 </script>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-6 col-md-offset-2 col-xs-12">
+	<h2 class="text-center">Edit category</h2>
+	<form name="editCategoryForm" action="{{url_for('editCategory', category_id=category.id)}}" method="post" onsubmit="return validateEditCategoryForm()" enctype="multipart/form-data">
+	  <div class="form-group">
+	    <label for="catName">Edit Category</label>
+	    <input type="text" class="form-control" id="catName" aria-describedby="catNameHelp" name="catName" value="{{category.name | safe}}">
+	    <div class="alert alert-danger new-category-alert">
+	    	<small>Name field cant be empty</small>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label for="catPic">Upload Image</label>
+	    <input type="file" class="form-control-file" id="catPic" aria-describedby="catPicHelp" name="file">
+	    <small id="catPicHelp" class="form-text text-muted">Please upload a relevant image</small>
+	    {% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<div class="alert alert-danger new-category-pic-alert ">
+				{% for message in messages %}
+					<small>{{message}}</small>
+				{% endfor %}
+				</div>
+			{% endif %}
+		{% endwith %}
+	  </div>
+	   <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	  <span>
+	</form>
+	<a href="{{url_for('viewCategory', category_id=category.id)}}"><button type="button" class="btn btn-warning">Cancel</button>
+	</span>
+
+	<hr>
+		<div class="alert alert-info text-center">You posted this category. You may delete it. 
+				<form name="deleteCategoryForm" action="{{url_for('deleteCategory', category_id=category.id)}}" method="post" enctype="multipart/form-data">
+					<input name=_csrf_delete_token type=hidden value="{{ csrf_delete_token() }}">
+					<button type="submit" class="btn btn-danger">Delete Category</button>
+				</form>
+		</div>
+</div>
+{% endblock %}

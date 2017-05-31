@@ -16,3 +16,18 @@ class Item(Base):
 	user = relationship(User)
 	time_created = Column(DateTime(timezone=True), server_default=func.now())
 	time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+
+	# Property to return a JSON serialized dictionary of db class
+	@property
+	def serialize(self):
+		return {
+			'id': self.id,
+			'name': self.name,
+			'description': self.description,
+			'category_id': self.category_id,
+			'category_name': self.category.name,
+			'user_id': self.user_id,
+			'user_name': self.user.name,
+			'time_created': self.time_created,
+			'time_updated': self.time_updated
+		}

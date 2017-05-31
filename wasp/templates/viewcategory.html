@@ -8,17 +8,25 @@
 {%if items %}
 	{% for item in items %}
 	<div class="col-md-3 col-xs-4 box_grid" redir={{url_for('viewItem', category_id=item.category_id, item_id=item.id)}}>
-		<ul>
-			<li>{{item.name}}</li>
-			<li>{{item.description}}</li>
-			<li>{{item.time_created}}</li>
-		</ul>
+			<img class="img-responsive" src="{{url_for('uploadedFile', filename=item.picture_name)}}">
+			<p class="text-center">{{item.name}}</p>
+			<p class="text-center short_desc">{{item.description}}</p>
+			<p class="text-center">{{item.time_created}}</p>
+		
 		{% if session.get('user_id') == item.user_id %}
-		<a href="/edit"><button class="btn btn-primary btn-block">Edit</button></a>
+		<a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}"><button class="btn btn-primary btn-block">Edit</button></a>
 		{% endif %}
 	</div>
 	{% endfor %}
 {% else %}
 <p class="text-center">No Items to display</p>
 {% endif %}
+<script>
+	$(".short_desc").each(function() {
+		var desc = $(this).html();
+		var sh_desc = desc.slice(0,55);
+		sh_desc += ' ...';
+		$(this).html(sh_desc);
+});
+</script>
 {% endblock %}

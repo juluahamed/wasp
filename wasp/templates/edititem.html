@@ -3,7 +3,7 @@
 <div class="col-md-6 col-md-offset-2 col-xs-12">
 	<h2 class="text-center">Edit item</h2>
 
-	<form name="editItemForm" action="/newitem" method="post" onsubmit="return validateItemForm()" enctype="multipart/form-data">
+	<form name="editItemForm" action="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}" method="post" onsubmit="return validateItemEditForm()" enctype="multipart/form-data">
 		<div class="form-group">
 			<input type="text" name="catName" id="catName" value="{{item.category.name}}" class="form-control" readonly>
 		</div>
@@ -11,7 +11,7 @@
 		<div class="form-group">
 		    <label for="itemName">New Item</label>
 		    <input type="text" class="form-control" id="itemName" aria-describedby="itemNameHelp" placeholder="New Item" name="itemName" maxlength="50" value="{{item.name}}">
-		    <div class="alert alert-danger new-item-alert">
+		    <div class="alert alert-danger new-item-alert new-item-alert-iName">
 		    	<small>Name field cant be empty</small>
 		    </div>
 		  </div>
@@ -19,12 +19,23 @@
 			<label for="itemDescription">Description</label>
 			<textarea type="text" class="form-control" rows="5" id="itemDescription" aria-describedby="catNameHelp" name="itemDescription">{{item.description}}</textarea>
 			<small id="itemDescriptionHelp" class="form-text text-muted">Required. Please provide a description</small>
-			<div class="alert alert-danger new-item-desc-alert">
+			<div class="alert alert-danger new-item-desc-alert new-item-alert-iDesc">
 				<small>Name field cant be empty</small>
 			</div>
 		</div>
+    	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 		<button type="submit" class="btn btn-primary">Submit</button>
+		<span>
 	</form>
+			<a href="{{url_for('viewItem', item_id=item.id, category_id=item.category.id)}}"><button type="button" class="btn btn-warning">Cancel</button></a>
+		</span>
+		<hr>
+		<div class="alert alert-info text-center">You posted this item. You may delete it. 
+				<form name="deleteItemForm" action="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}" method="post" enctype="multipart/form-data">
+					<input name=_csrf_delete_token type=hidden value="{{ csrf_delete_token() }}">
+					<button type="submit" class="btn btn-danger">Delete Item</button>
+				</form>
+		</div>
 </div>
 {% endblock %}
 

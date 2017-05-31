@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block meta %}
+	<meta id="liked-data" data-name="{{liked|safe}}" data-count="{{likes|safe}}">
+{% endblock %}
 {% block content %}
 <div class="col-md-12">
 	{% with messages = get_flashed_messages() %}
@@ -23,16 +26,56 @@
 	<p class="text-center">{{item.description}}</p>
 	<p class="text-center small"><span>Created by:{{item.user.name}}</span> | <span> Last edited:{% if item.time_updated is none %} {{item.time_created}} {% else %} {{item.time_updated}} {% endif %} </span> | <span>Created at: {{item.time_created}}</span></p>
 	{% if session.get('username') %}
+	<p class="text-center"><button type="button" class="btn btn-default" id="like-button">
+	  <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> {% if liked %}Liked{% else %}Like {% endif %}
+	</button> <span id="like-count">{{likes}}</span> people loved it!
+	</p>
 	<p class="alert alert-success text-center">Know about this item? You can add new images to make this better <a href="{{url_for('addImage', category_id=item.category.id, item_id=item.id)}}"><button class="btn btn-primary">Add Images</button></a></p>
 	{% endif %}
 
 </div>
 
 <script>
+	// Click event listener to change the main display picture on clicking a image from picture tray
 	$(".pic-tray div img").click(function(){
 		var selected_src = $(this).attr("src");
 		$(".default-pic img").attr("src", selected_src);
 		$(".default-pic p a").attr("href","/deleteimage/"+ selected_src.split('/')[2])
+});
+	// Click event listener to fire Ajax request to update likes; avoid page refresh.
+	$('#like-button').click( function() {
+    var data = {} // data
+
+    data['user_id'] = {{session.get('user_id')}};  // survey_id injected from flask
+    data['item_id'] = {{item.id}};
+    data['item_name'] = '{{item.name}}'; // user_ip injected from flask, request.remote_addr
+    data['category_id'] = {{item.category.id}};
+    data['category_name'] = '{{item.category.name}}';
+    data['status'] = $('#liked-data').data().name;
+
+    $.ajax({
+    type : "POST",
+    url : "{{ url_for('ajaxLike') }}",
+    data: JSON.stringify(data, null, '\t'),
+    contentType: 'application/json;charset=UTF-8',
+    success: function(result) {
+        console.log(result);
+        if (result == "Liked") {
+        	$('#liked-data').data().name = "Liked";
+        	$('#like-button').html('<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Liked');
+        	var counter = $('#liked-data').data().count + 1;
+        	$('#liked-data').data().count = $('#liked-data').data().count + 1
+        	$('#like-count').html(String(counter));
+        }
+        else if (result == "Deleted") {
+        	$('#liked-data').data().name = "None";
+        	$('#like-button').html('<span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Like');
+        	var counter = $('#liked-data').data().count - 1;
+        	$('#liked-data').data().count = $('#liked-data').data().count - 1
+        	$('#like-count').html(String(counter));
+        }
+    }
+});
 });
 </script>
 
