@@ -61,5 +61,5 @@ This app creates framework with following functionalities
 - If you make some changes and flask gives error along the lines of 'not able to find app named wasp'. do the following
 	- It is likely be some error while importing new files, to find exact issue
 		- On root folder, open python shell. ``` python ```
-		- ``` import wasp ``
+		- ``` import wasp ```
 		- python will print out the errors. Fix it and run flask app again
